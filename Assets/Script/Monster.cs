@@ -4,25 +4,35 @@ using UnityEngine;
 
 public class Monster : MonoBehaviour
 {
-    int hp;
-    Vector3 resetPosition;
+    public GameObject gCharacter;
 
-    void Start()
-    {
-        resetPosition = new Vector3(0.0f, 6.0f);
-    }
+    private int iHp;
+    private Vector3 vResetPosition;
     
-    void Update()
+    public void Init()
     {
-        if (hp <= 0)
-        {
-            DestroyObject(this);
-        }
+        iHp = 100;
+        vResetPosition = new Vector3(0.0f, 8.0f);
+    }
 
-        if(this.GetComponent<Transform>().position.y >= -6.0f)
+    private void Update()
+    {
+        if (iHp <= 0)
         {
-            Debug.Log("Out");
-            this.GetComponent<Transform>().Translate(resetPosition);
+            Destroy(this.gameObject);
+        }
+        
+        if(this.GetComponent<Transform>().position.y <= -8.0f)
+        {
+            this.GetComponent<Transform>().position = vResetPosition;
+            this.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         }
 	}
+
+    // ----- Set -----
+
+    public void SetCharacter(GameObject Character)
+    {
+        gCharacter = Character;
+    }
 }

@@ -5,36 +5,65 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
-    public GameObject pMonster;
+    public GameObject gMonster;
     public float fRange;
     public float fPower;
+    public float fDelay;
 
     private float fDistance;
-    private float fAngle;
+    private float fCurrentDelay;
+    private bool bCanAttack;
     private Vector2 vAngle;
-
-    void Update()
+    
+    public void Init()
     {
-
+        fDistance = 0.0f;
+        fCurrentDelay = 0.0f;
+        bCanAttack = true;
+        vAngle = Vector2.zero;
     }
 
-    void OnMouseDown()
+    private void Update()
     {
-        fDistance = Vector2.Distance(pMonster.GetComponent<Transform>().position, this.GetComponent<Transform>().position);
+        if (bCanAttack == false)
+        {
+            fCurrentDelay += 0.1f;
+            if (fCurrentDelay >= fDelay)
+            {
+                fCurrentDelay = 0.0f;
+                bCanAttack = true;
+            }
+        }
+    }
+
+    private void OnMouseDown()
+    {
+        if (bCanAttack == false)
+            return;
+
+        fDistance = Vector2.Distance(gMonster.GetComponent<Transform>().position, this.GetComponent<Transform>().position);
 
         if (fDistance <= fRange)
         {
-            vAngle = pMonster.GetComponent<Transform>().position - this.GetComponent<Transform>().position;
+            vAngle = gMonster.GetComponent<Transform>().position - this.GetComponent<Transform>().position;
             vAngle.Normalize();
-            pMonster.GetComponent<Transform>().Translate(Vector2.zero);
-            pMonster.GetComponent<Rigidbody2D>().AddForce(vAngle * fPower);
+            gMonster.GetComponent<Transform>().Translate(Vector2.zero);
+            gMonster.GetComponent<Rigidbody2D>().AddForce(vAngle * fPower);
+
+            bCanAttack = false;
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, fRange);
     }
 
     // ----- Set -----
 
-    public void SetMonster(GameObject gMonster)
+    public void SetMonster(GameObject monster)
     {
-        pMonster = gMonster;
+        gMonster = monster;
     }
 }
