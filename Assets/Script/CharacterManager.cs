@@ -10,4 +10,9 @@ public class CharacterManager : Singleton<CharacterManager>
     {
         lCharacter = new List<GameObject>();
     }
+
+    public void AddCharacter()
+    {
+
+    }
 }

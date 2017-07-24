@@ -5,22 +5,36 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
-    public GameObject gMonster;
-    public float fRange;
-    public float fPower;
-    public float fDelay;
-
+    private GameObject gMonster;
+    private Vector2 vAngle;
+    private int iHp;
+    private int iAtk;
     private float fDistance;
     private float fCurrentDelay;
+    private float fCharge;
+    private float fRange;
+    private float fPower;
+    private float fDelay;
+    private float fCritical;
     private bool bCanAttack;
-    private Vector2 vAngle;
-    
+    private bool bCharging;
+
     public void Init()
     {
+        if (gMonster == null)
+            Debug.Log("NULL Monster");
+        vAngle = Vector2.zero;
+        iHp = 100;
+        iAtk = 10;
         fDistance = 0.0f;
         fCurrentDelay = 0.0f;
+        fCharge = 0.0f;
+        fRange = 2.0f;
+        fPower = 1000.0f;
+        fDelay = 2.0f;
+        fCritical = 0.5f;
         bCanAttack = true;
-        vAngle = Vector2.zero;
+        bCharging = false;
     }
 
     private void Update()
@@ -34,10 +48,21 @@ public class Character : MonoBehaviour
                 bCanAttack = true;
             }
         }
+
+        if (bCharging == true)
+        {
+            fCharge += 0.1f;
+        }
+        else if (bCharging == false)
+        {
+            fCharge = 0.0f;
+        }
     }
 
     private void OnMouseDown()
     {
+        bCharging = true;
+
         if (bCanAttack == false)
             return;
 
@@ -54,6 +79,11 @@ public class Character : MonoBehaviour
         }
     }
 
+    private void OnMouseUp()
+    {
+        bCharging = false;
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
@@ -65,5 +95,57 @@ public class Character : MonoBehaviour
     public void SetMonster(GameObject monster)
     {
         gMonster = monster;
+    }
+
+    public void SetHp(int hp)
+    {
+        iHp = hp;
+    }
+
+    public void SetAtk(int atk)
+    {
+        iAtk = atk;
+    }
+
+    public void SetRange(float range)
+    {
+        fRange = range;
+    }
+
+    public void SetPower(float power)
+    {
+        fPower = power;
+    }
+
+    public void SetCritical(float critical)
+    {
+        fCritical = critical;
+    }
+
+    // ----- Get -----
+    
+    public int GetHp()
+    {
+        return iHp;
+    }
+
+    public int GetAtk()
+    {
+        return iAtk;
+    }
+
+    public float GetRange()
+    {
+        return fRange;
+    }
+
+    public float GetPower()
+    {
+        return fPower;
+    }
+
+    public float GetCritical()
+    {
+        return fCritical;
     }
 }
