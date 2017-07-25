@@ -5,39 +5,24 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
-    private GameObject gMonster;
-    private Vector2 vAngle;
-    private int iHp;
-    private int iAtk;
-    private float fDistance;
-    private float fCurrentDelay;
-    private float fCharge;
-    private float fRange;
-    private float fPower;
-    private float fDelay;
-    private float fCritical;
-    private bool bCanAttack;
-    private bool bCharging;
+    protected GameObject  gMonster;       // data of Monster now
+    protected Vector2     vAngle;         // angle between monster
+    protected float       fDistance;      // distance between monster
+    protected float       fCurrentDelay;  // attack delay time
+    protected float       fCharge;        // charging time
+    protected bool        bCanAttack;     // can attack now
+    protected bool        bCharging;      // is charging now
 
-    public void Init()
-    {
-        if (gMonster == null)
-            Debug.Log("NULL Monster");
-        vAngle = Vector2.zero;
-        iHp = 100;
-        iAtk = 10;
-        fDistance = 0.0f;
-        fCurrentDelay = 0.0f;
-        fCharge = 0.0f;
-        fRange = 2.0f;
-        fPower = 1000.0f;
-        fDelay = 2.0f;
-        fCritical = 0.5f;
-        bCanAttack = true;
-        bCharging = false;
-    }
+    protected int         iHp;            // hp
+    protected int         iAtk;           // atk
+    protected float       fRange;         // strike range / short = 2, middle = 4, long = 6
+    protected float       fPower;         // strike power / short = 1000, middle = 500, long = 10
+    protected float       fDelay;         // attack delay
+    protected float       fCritical;      // critical rate
 
-    private void Update()
+    // MonoBehaviour
+
+    protected void Update()
     {
         if (bCanAttack == false)
         {
@@ -59,7 +44,7 @@ public class Character : MonoBehaviour
         }
     }
 
-    private void OnMouseDown()
+    protected void OnMouseDown()
     {
         bCharging = true;
 
@@ -67,7 +52,6 @@ public class Character : MonoBehaviour
             return;
 
         fDistance = Vector2.Distance(gMonster.GetComponent<Transform>().position, this.GetComponent<Transform>().position);
-
         if (fDistance <= fRange)
         {
             vAngle = gMonster.GetComponent<Transform>().position - this.GetComponent<Transform>().position;
@@ -76,18 +60,44 @@ public class Character : MonoBehaviour
             gMonster.GetComponent<Rigidbody2D>().AddForce(vAngle * fPower);
 
             bCanAttack = false;
+            gMonster.GetComponent<Monster>().SetHp()
         }
     }
 
-    private void OnMouseUp()
+    protected void OnMouseUp()
     {
         bCharging = false;
     }
 
-    private void OnDrawGizmos()
+    protected void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, fRange);
+    }
+
+    // Custom Method
+
+    public void Init()
+    {
+        gMonster        = null;
+        vAngle          = Vector2.zero;
+        fDistance       = 0.0f;
+        fCurrentDelay   = 0.0f;
+        fCharge         = 0.0f;
+        bCanAttack      = true;
+        bCharging       = false;
+
+        InitData();
+    }
+
+    protected virtual void InitData()
+    {
+        iHp         = 100;
+        iAtk        = 10;
+        fRange      = 2.0f;
+        fPower      = 1000.0f;
+        fDelay      = 2.0f;
+        fCritical   = 0.5f;
     }
 
     // ----- Set -----

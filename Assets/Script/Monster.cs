@@ -4,23 +4,15 @@ using UnityEngine;
 
 public class Monster : MonoBehaviour
 {
-    private GameObject gCharacter;
-    private Vector3 vResetPosition;
+    private GameObject  gCharacter;     // data of Character
+    private int         iHp;            // hp
+    private int         iAtk;           // atk
+    private float       fSpeed;         // moving speed
+    private float       fStrikeRange;   // monster's strike range
 
-    private int iHp;
-    private int iAtk;
-    private float fSpeed;
-    private float fStrikeRange;
+    private Vector3     vResetPosition; // Reset Position
 
-    public void Init()
-    {
-        vResetPosition = new Vector3(0.0f, 8.0f);
-
-        iHp = 100;
-        iAtk = 10;
-        fSpeed = 1.0f;
-        fStrikeRange = 1.0f;
-    }
+    // MonoBehaviour
 
     private void Update()
     {
@@ -37,6 +29,19 @@ public class Monster : MonoBehaviour
 
         this.GetComponent<Rigidbody2D>().velocity *= fSpeed;
         this.GetComponent<CircleCollider2D>().radius = fStrikeRange / 2.0f;
+    }
+
+    // Custom Method
+
+    public void Init()
+    {
+        gCharacter = null;
+        vResetPosition = new Vector3(0.0f, 8.0f);
+
+        iHp = 100;
+        iAtk = 10;
+        fSpeed = 1.0f;
+        fStrikeRange = 1.0f;
     }
 
     // ----- Set -----
